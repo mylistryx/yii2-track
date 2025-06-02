@@ -16,6 +16,8 @@ class m250601_203505_track extends Migration
             'created_at' => $this->dateTime()->notNull(),
             'updated_at' => $this->dateTime()->notNull(),
         ]);
+
+        $this->createIndex('idx-track-status', 'track', 'status');
     }
 
     /**
@@ -23,6 +25,7 @@ class m250601_203505_track extends Migration
      */
     public function safeDown(): void
     {
+        $this->dropIndex('idx-track-status', 'track');
         $this->dropTable('track');
     }
 }

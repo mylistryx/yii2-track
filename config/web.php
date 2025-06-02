@@ -1,10 +1,12 @@
 <?php
 
+use app\components\TrackLogger;
 use app\models\Identity;
 use yii\caching\FileCache;
 use yii\log\FileTarget;
 use yii\rest\UrlRule;
 use yii\symfonymailer\Mailer;
+use yii\web\JsonParser;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
@@ -12,15 +14,22 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'trackLogger'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        'trackLogger' => [
+            'class' => TrackLogger::class,
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'MgAZyJNJK1Us_1KEJKi_4Ly653wQesnQ',
+            'parsers' => [
+                'application/json' => JsonParser::class,
+                'application/xml' => XmlParser::class,
+            ]
         ],
         'cache' => [
             'class' => FileCache::class

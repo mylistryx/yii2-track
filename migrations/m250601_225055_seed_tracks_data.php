@@ -16,7 +16,7 @@ class m250601_225055_seed_tracks_data extends Migration
         for ($i = 1; $i < 1000; $i++) {
             $values[$i] = [
                 $i,
-                $faker->creditCardNumber() . rand(100, 999),
+                $faker->uuid,
                 array_rand(Track::getStatusList()),
                 $faker->date('Y-m-d H:i:s'),
                 $faker->date('Y-m-d H:i:s'),
