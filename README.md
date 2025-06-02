@@ -32,202 +32,87 @@ DIRECTORY STRUCTURE
       views/              contains view files for the Web application
       web/                contains the entry script and Web resources
 
-
-
-REQUIREMENTS
-------------
-
-The minimum requirement by this project template that your Web server supports PHP 7.4.
-
-
-INSTALLATION
-------------
-
-### Install via Composer
-
-If you do not have [Composer](https://getcomposer.org/), you may install it by following the instructions
-at [getcomposer.org](https://getcomposer.org/doc/00-intro.md#installation-nix).
-
-You can then install this project template using the following command:
-
-~~~
-composer create-project --prefer-dist yiisoft/yii2-app-basic basic
-~~~
-
-Now you should be able to access the application through the following URL, assuming `basic` is the directory
-directly under the Web root.
-
-~~~
-http://localhost/basic/web/
-~~~
-
-### Install from an Archive File
-
-Extract the archive file downloaded from [yiiframework.com](https://www.yiiframework.com/download/) to
-a directory named `basic` that is directly under the Web root.
-
-Set cookie validation key in `config/web.php` file to some random secret string:
-
-```php
-'request' => [
-    // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-    'cookieValidationKey' => '<secret random string goes here>',
-],
-```
-
-You can then access the application through the following URL:
-
-~~~
-http://localhost/basic/web/
-~~~
-
-
-### Install with Docker
-
-Update your vendor packages
-
-    docker-compose run --rm php composer update --prefer-dist
-    
-Run the installation triggers (creating cookie validation code)
-
-    docker-compose run --rm php composer install    
-    
-Start the container
-
-    docker-compose up -d
-    
-You can then access the application through the following URL:
-
-    http://127.0.0.1:8000
-
-**NOTES:** 
-- Minimum required Docker engine version `17.04` for development (see [Performance tuning for volume mounts](https://docs.docker.com/docker-for-mac/osxfs-caching/))
-- The default configuration uses a host-volume in your home directory `.docker-composer` for composer caches
-
-
-CONFIGURATION
--------------
-
-### Database
-
-Edit the file `config/db.php` with real data, for example:
-
-```php
-return [
-    'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
-    'username' => 'root',
-    'password' => '1234',
-    'charset' => 'utf8',
-];
-```
-
-**NOTES:**
-- Yii won't create the database for you, this has to be done manually before you can access it.
-- Check and edit the other files in the `config/` directory to customize your application as required.
-- Refer to the README in the `tests` directory for information specific to basic application tests.
-
-
-TESTING
--------
-
-Tests are located in `tests` directory. They are developed with [Codeception PHP Testing Framework](https://codeception.com/).
-By default, there are 3 test suites:
-
-- `unit`
-- `functional`
-- `acceptance`
-
-Tests can be executed by running
-
-```
-vendor/bin/codecept run
-```
-
-The command above will execute unit and functional tests. Unit tests are testing the system components, while functional
-tests are for testing user interaction. Acceptance tests are disabled by default as they require additional setup since
-they perform testing in real browser. 
-
-
-### Running  acceptance tests
-
-To execute acceptance tests do the following:  
-
-1. Rename `tests/acceptance.suite.yml.example` to `tests/acceptance.suite.yml` to enable suite configuration
-
-2. Replace `codeception/base` package in `composer.json` with `codeception/codeception` to install full-featured
-   version of Codeception
-
-3. Update dependencies with Composer 
-
-    ```
-    composer update  
-    ```
-
-4. Download [Selenium Server](https://www.seleniumhq.org/download/) and launch it:
-
-    ```
-    java -jar ~/selenium-server-standalone-x.xx.x.jar
-    ```
-
-    In case of using Selenium Server 3.0 with Firefox browser since v48 or Google Chrome since v53 you must download [GeckoDriver](https://github.com/mozilla/geckodriver/releases) or [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) and launch Selenium with it:
-
-    ```
-    # for Firefox
-    java -jar -Dwebdriver.gecko.driver=~/geckodriver ~/selenium-server-standalone-3.xx.x.jar
-    
-    # for Google Chrome
-    java -jar -Dwebdriver.chrome.driver=~/chromedriver ~/selenium-server-standalone-3.xx.x.jar
-    ``` 
-    
-    As an alternative way you can use already configured Docker container with older versions of Selenium and Firefox:
-    
-    ```
-    docker run --net=host selenium/standalone-firefox:2.53.0
-    ```
-
-5. (Optional) Create `yii2basic_test` database and update it by applying migrations if you have them.
-
-   ```
-   tests/bin/yii migrate
-   ```
-
-   The database configuration can be found at `config/test_db.php`.
-
-
-6. Start web server:
-
-    ```
-    tests/bin/yii serve
-    ```
-
-7. Now you can run all available tests
-
-   ```
-   # run all available tests
-   vendor/bin/codecept run
-
-   # run acceptance tests
-   vendor/bin/codecept run acceptance
-
-   # run only unit and functional tests
-   vendor/bin/codecept run unit,functional
-   ```
-
-### Code coverage support
-
-By default, code coverage is disabled in `codeception.yml` configuration file, you should uncomment needed rows to be able
-to collect code coverage. You can run your tests and collect coverage with the following command:
-
-```
-#collect coverage for all tests
-vendor/bin/codecept run --coverage --coverage-html --coverage-xml
-
-#collect coverage only for unit tests
-vendor/bin/codecept run unit --coverage --coverage-html --coverage-xml
-
-#collect coverage for unit and functional tests
-vendor/bin/codecept run functional,unit --coverage --coverage-html --coverage-xml
-```
-
-You can see code coverage output under the `tests/_output` directory.
+Краткая документация
+------------------
+
+Собрать контейнеры
+``````
+docker compose up -d
+``````
+Обновить зависимости composer
+``````
+docker exec -it app composer install
+``````
+
+Применить миграции
+``````
+docker exec -it app yii migrate --interactive=0
+``````
+Применить миграции для тестов
+``````
+docker exec -it app yii_test migrate --interactive=0
+``````
+Запустить тесты
+``````
+docker exec -it app codecept build && codecept run
+``````
+Web интерфейс (ссылка на панели вверху):
+
+``````
+http://localhost:8000
+``````
+
+В гриде фильтры - id, status - строгое соответствие. track_number - LIKE, на нем уникальный индекс на уровне БД, так что
+сильно те затупляет. Пробовал загнать 100 000 000 записей, ~2 секунд подбор. Если упрется - поле дробить на части по
+маске и далее играть с индексами, либо поисковый движок типа manticore.
+
+REST API:
+
+````````
+GET http://localhost:8000/api/track?access-token=100-token
+````````
+
+POST/PUT/PATCH/DELETE/OPTIONS - в соответствии с документацией к REST в
+Yii2 https://www.yiiframework.com/doc/guide/2.0/ru/rest-quick-start
+
+Авторизация через Bearer token или query string.
+
+Фильтрация так же в соответствии с документацией
+Yii2 https://www.yiiframework.com/doc/guide/2.0/en/rest-filtering-collections:
+
+По нескольким значениям
+
+``````
+http://localhost:8000/api/track?access-token=100-token&filter[status][in][]=new&filter[status][in][]=failed
+``````
+
+По строгому соответствию
+
+``````
+http://localhost:8000/api/track?access-token=100-token&filter[status][eq]=new
+``````
+
+Логирование изменений Track происходит через Yii Event. Если понадобится добавить лог еще какой, добавляем handler и
+всё. Модель базовая чиста, никаких beforeUpdate, afterUpdate и иже с ними.
+Просмотр лога при детальном просмотре или через extraFields в API. Можно было сделать на уровне БД и триггеров, но на
+практике с этим были только проблемы, проще на уровне кода.
+
+``````
+http://localhost:8000/api/tracks/1?access-token=100-token&expand=changeLog (Предварительно для первой записи нагенерено несколько произвольных изменений)
+``````
+
+Массовые изменения сделал на уровне контроллера. В идеале перенести в экшен, добавить filter как для index, и апдейтить
+все, что попало под фильтр. Долго!
+Динамическая модель валидирует входяще данные, далее в цикле правим значение (если через batch - Event не отработает и в
+логе будет пусто).
+
+Пример запроса для штормовского http клиента:
+
+``````
+PUT http://localhost:8000/api/track/update-multiple
+Content-Type: application/json
+
+{
+"id": [1,2,3,4,5,6,7,8,9,10,100,200,300,500],
+"status": "failed"
+}

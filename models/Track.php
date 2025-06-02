@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
@@ -12,6 +13,8 @@ use yii\helpers\ArrayHelper;
  * @property string $status
  * @property string $created_at
  * @property string $updated_at
+ *
+ * @property-read array|TrackChangelog[] $trackChangelogs
  */
 class Track extends ActiveRecord
 {
@@ -60,5 +63,15 @@ class Track extends ActiveRecord
     public function getStatusLabel(): string
     {
         return ArrayHelper::getValue(self::getStatusList(), $this->status);
+    }
+
+    public function getTrackChangelogs(): ActiveQuery
+    {
+        return $this->hasMany(TrackChangelog::class, ['track_id' => 'id']);
+    }
+
+    public function extraFields(): array
+    {
+        return ['changeLog' => 'trackChangelogs'];
     }
 }

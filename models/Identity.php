@@ -7,18 +7,10 @@ use yii\web\IdentityInterface;
 
 class Identity extends BaseObject implements IdentityInterface
 {
-    public ?int $id {
-        get {
-            return $this->id;
-        }
-    }
+    public ?int $id = null;
     public ?string $username = null;
     public ?string $password = null;
-    public ?string $authKey {
-        get {
-            return $this->authKey;
-        }
-    }
+    public ?string $authKey =null;
     public ?string $accessToken = null;
 
     private static array $users = [
@@ -95,5 +87,15 @@ class Identity extends BaseObject implements IdentityInterface
     public function validatePassword(string $password): bool
     {
         return $this->password === $password;
+    }
+
+    public function getId() : ?int
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey(): ?string
+    {
+        return $this->authKey;
     }
 }

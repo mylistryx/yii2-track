@@ -1,5 +1,6 @@
 <?php
 
+use app\components\TrackLogger;
 use yii\caching\FileCache;
 use yii\faker\FixtureController;
 use yii\log\FileTarget;
@@ -10,14 +11,17 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'trackLogger'],
     'controllerNamespace' => 'app\commands',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
         '@tests' => '@app/tests',
     ],
     'components' => [
+        'trackLogger' => [
+            'class' => TrackLogger::class,
+        ],
         'cache' => [
             'class' => FileCache::class,
         ],
